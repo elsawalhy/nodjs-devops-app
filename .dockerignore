@@ -1,0 +1,5 @@
+Jenkinsfile
+Dockerfile
+k8s
+.gitignore
+*.yml

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+    name: postgres-db-deploy
+    namespace: nodejs-ns
+    labels:
+      db: postgres-db 
+spec: 
+   replicas: 3
+   selector: 
+      matchLabels:
+          db: postgres-db
+   template:
+      metadata:
+        labels:
+          db: postgres-db 
+      spec:
+        containers:
+          - name: postgres-db 
+            image: postgres 
+            ports: 
+              - containerPort: 5432  
+            env:
+             - name: POSTGRES_USER
+               value: "postgres"
+             - name: POSTGRES_DB
+               value: "postgress-db"   
+             - name: POSTGRES_PASSWORD
+               valueFrom:
+                secretKeyRef:
+                     name: db-secret
+                     key: db-password
+            volumeMounts:
+              - name: postgres-vol
+                mountPath: /var/lib/postgresql
+        volumes: 
+          - name: postgres-vol
+            persistentVolumeClaim:
+              claimName: pstgres-pvc                
+
+                  
+                       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service 
+  namespace: nodejs-ns
+spec:
+  selector:
+      db: postgres-db 
+  type: NodePort  
+  ports:
+  - name: postgres
+    port: 5432
+    targetPort: 5432

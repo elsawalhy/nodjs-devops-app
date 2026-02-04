@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+   name: nodejs-app
+   namespace: nodejs-ns 
+   labels: 
+     app: nodejs-app
+
+spec: 
+   replicas: 3
+   selector: 
+      matchLabels:
+        app: nodejs-app 
+   template:
+      metadata:
+        labels:
+          app: nodejs-app
+      spec:
+        containers:
+          - name: nodejs-app
+            image: elsawalhy133/nodejs-app
+            ports:
+              - containerPort: 8000
+            env: 
+              - name: DB_USER
+                value: "postgres"
+              - name: DB_PASSWORD
+                valueFrom:
+                   secretKeyRef:
+                       name: db-secret
+                       key: db-password
+              - name: DB_HOST
+                value: "postgres-service"
+              - name: DB_DATABASE
+                value: "postgress-db"           
+              - name: DB_PORT
+                value: "5432"   
+
+
+---
+apiVersion: v1 
+kind: Service 
+metadata: 
+    name: nodejs-app-service 
+    namespace: nodejs-ns 
+spec:
+   selector: 
+       app: nodejs-app
+   type: NodePort
+   ports:
+     - name: nodejs-app
+       port: 8000
+       targetPort: 8000
+
+         
+
