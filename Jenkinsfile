@@ -9,7 +9,7 @@ pipeline {
                withCredentials([
                   usernamePassword(credentialsId:'dockerhub',usernameVariable: 'DOCKER_USER',passwordVariable:'DOCKER_PASS')
                ]) {
-                    sh'echo $DOCKER_PASS | docker login -u DOCKER_USER --password-stdin'
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                }
             }
         } 
@@ -31,7 +31,7 @@ pipeline {
             cd k8s/
 
             kubectl apply -f secret.yml -n nodejs-ns
-            kubectl apply -f pv&pvc.yml -n nodejs-ns
+            kubectl apply -f pv-pvc.yml -n nodejs-ns
             kubectl apply -f db.ym -n nodejs-ns
             kubectl apply -f app.yml -n nodejs-ns
 
