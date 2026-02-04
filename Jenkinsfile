@@ -31,7 +31,7 @@ pipeline {
             cd k8s/
 
             kubectl apply -f pv-pvc.yml -n nodejs-ns
-            kubectl apply -f db.ym -n nodejs-ns
+            kubectl apply -f db.yml -n nodejs-ns
             kubectl apply -f app.yml -n nodejs-ns
 
             kubectl get svc -n nodejs-ns
