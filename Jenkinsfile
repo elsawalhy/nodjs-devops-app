@@ -30,7 +30,6 @@ pipeline {
             kubectl create ns nodejs-ns || true
             cd k8s/
 
-            kubectl apply -f secret.yml -n nodejs-ns
             kubectl apply -f pv-pvc.yml -n nodejs-ns
             kubectl apply -f db.ym -n nodejs-ns
             kubectl apply -f app.yml -n nodejs-ns
